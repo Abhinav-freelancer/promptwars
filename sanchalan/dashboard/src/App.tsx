@@ -47,16 +47,13 @@ const INITIAL_STATE: SimState = {
 };
 
 const DEMO_STATE: SimState = {
-  tick: 142,
-  time_sec: 8520,
-  total_vehicles: 87,
-  weather_risk: 0.7,
+  tick: 142, time_sec: 8520, total_vehicles: 87, weather_risk: 0.7,
   institutional_flag: false,
   corridors: {
     mg_road_west: {
       vehicle_flow: 14, mean_speed: 8.2, num_buses: 1, bus_headway_var: 12,
       crs_score: 0.78, crs_level: 'red',
-      explanation: 'High congestion detected. Vehicle flow exceeds threshold with low speeds. Signal priority recommended.',
+      explanation: 'High congestion. Vehicle flow exceeds threshold with low speeds. Signal priority recommended.',
       type_counts: { car: 6, twowheeler: 5, auto: 2, bus: 1 },
     },
     mg_road_west_rev: {
@@ -68,7 +65,7 @@ const DEMO_STATE: SimState = {
     mg_road_central: {
       vehicle_flow: 18, mean_speed: 6.5, num_buses: 2, bus_headway_var: 28,
       crs_score: 0.85, crs_level: 'red',
-      explanation: 'Critical congestion. Bus bunching detected (headway variance 28s). Immediate signal priority and bus dispatch action needed.',
+      explanation: 'Critical congestion. Bus bunching detected (headway variance 28s). Immediate action needed.',
       type_counts: { car: 7, twowheeler: 6, auto: 3, bus: 2 },
     },
     mg_road_central_rev: {
@@ -80,7 +77,7 @@ const DEMO_STATE: SimState = {
     mg_road_east: {
       vehicle_flow: 10, mean_speed: 10.8, num_buses: 0, bus_headway_var: 0,
       crs_score: 0.48, crs_level: 'amber',
-      explanation: 'Moderate congestion building. Monitor for further degradation. Speed trending downward.',
+      explanation: 'Moderate congestion building. Monitor for further degradation.',
       type_counts: { car: 4, twowheeler: 4, auto: 2, bus: 0 },
     },
     mg_road_east_rev: {
@@ -92,7 +89,7 @@ const DEMO_STATE: SimState = {
     brigade_road: {
       vehicle_flow: 12, mean_speed: 7.9, num_buses: 1, bus_headway_var: 15,
       crs_score: 0.72, crs_level: 'red',
-      explanation: 'Congestion due to rain effect on narrow road. Speed reduced below threshold. Commuter advisory recommended.',
+      explanation: 'Congestion due to rain effect. Speed reduced below threshold. Commuter advisory recommended.',
       type_counts: { car: 5, twowheeler: 4, auto: 2, bus: 1 },
     },
     brigade_road_rev: {
@@ -103,10 +100,10 @@ const DEMO_STATE: SimState = {
     },
   },
   recommendations: [
-    { corridor_id: 'mg_road_central', action_type: 'signal_priority', action_detail: 'Extend green phase by 15s for eastbound flow at C_signal_2. CRS 0.85, critical congestion.', priority: 1 },
-    { corridor_id: 'brigade_road', action_type: 'notify_only', action_detail: 'Commuter alert: Rain-related slowdown on Brigade Road. Consider alternate route via MG Road.', priority: 2 },
+    { corridor_id: 'mg_road_central', action_type: 'signal_priority', action_detail: 'Extend green phase by 15s for eastbound flow at C_signal_2. CRS 0.85.', priority: 1 },
+    { corridor_id: 'brigade_road', action_type: 'notify_only', action_detail: 'Commuter alert: Rain-related slowdown on Brigade Road. Consider alternate route.', priority: 2 },
     { corridor_id: 'mg_road_west', action_type: 'signal_priority', action_detail: 'Extend green phase by 10s at B_signal_1. Vehicle flow 14 with speed 8.2 km/h.', priority: 3 },
-    { corridor_id: 'mg_road_central', action_type: 'bus_dispatch', action_detail: 'Dispatch backup bus from depot to resolve headway gap on MG Road Central corridor.', priority: 2 },
+    { corridor_id: 'mg_road_central', action_type: 'bus_dispatch', action_detail: 'Dispatch backup bus to resolve headway gap on MG Road Central corridor.', priority: 2 },
   ],
   signals: {
     B_signal_1: { id: 'B_signal_1', phase: 2, current_state: 'GGrr', phase_duration: 30 },
@@ -116,6 +113,20 @@ const DEMO_STATE: SimState = {
   },
 };
 
+const API_URL = import.meta.env.VITE_API_URL || '';
+const WS_URL = API_URL
+  ? API_URL.replace('https', 'wss')
+  : (window.location.protocol === 'https:' ? 'wss:' : 'ws:');
+
+function getWsUrl() {
+  if (API_URL) return `${WS_URL}${new URL(API_URL).pathname}`.replace(/\/$/, '') + '/ws/live';
+  return `${WS_URL}//${window.location.host}/ws/live`;
+}
+
+function getApi(path: string) {
+  return API_URL ? `${API_URL}${path}` : path;
+}
+
 export default function App() {
   const [simState, setSimState] = useState<SimState>(INITIAL_STATE);
   const [selectedCorridor, setSelectedCorridor] = useState<string | null>(null);
@@ -123,32 +134,25 @@ export default function App() {
   const [simRunning, setSimRunning] = useState(false);
   const [demoMode, setDemoMode] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
+  const retryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const connectWs = useCallback(() => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${protocol}//${window.location.host}/ws/live`);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      setConnected(true);
-      setDemoMode(false);
-      console.log('[WS] Connected');
-    };
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setSimState(data);
-    };
-    ws.onclose = () => {
-      setConnected(false);
-      console.log('[WS] Disconnected, reconnecting...');
-      setTimeout(connectWs, 2000);
-    };
-    ws.onerror = () => ws.close();
+    if (retryRef.current) { clearTimeout(retryRef.current); retryRef.current = null; }
+    try {
+      const ws = new WebSocket(getWsUrl());
+      wsRef.current = ws;
+      ws.onopen = () => { setConnected(true); setDemoMode(false); };
+      ws.onmessage = (event) => { setSimState(JSON.parse(event.data)); };
+      ws.onclose = () => { setConnected(false); retryRef.current = setTimeout(connectWs, 2000); };
+      ws.onerror = () => ws.close();
+    } catch {
+      retryRef.current = setTimeout(connectWs, 2000);
+    }
   }, []);
 
   useEffect(() => {
     connectWs();
-    return () => wsRef.current?.close();
+    return () => { wsRef.current?.close(); if (retryRef.current) clearTimeout(retryRef.current); };
   }, [connectWs]);
 
   useEffect(() => {
@@ -156,34 +160,32 @@ export default function App() {
     const timer = setTimeout(async () => {
       if (connected) return;
       try {
-        const res = await fetch('/api/sim/status');
+        const res = await fetch(getApi('/api/sim/status'));
         if (res.ok) {
           const data = await res.json();
           setSimState(data);
-          setSimRunning(true);
+          setSimRunning(data.sim_running || false);
           return;
         }
-      } catch {
-        // no backend
-      }
+      } catch { /* no backend */ }
       setDemoMode(true);
       setSimState(DEMO_STATE);
-    }, 2000);
+    }, 2500);
     return () => clearTimeout(timer);
   }, [connected]);
 
   const toggleSim = async () => {
     const endpoint = simRunning ? '/api/sim/stop' : '/api/sim/start';
-    await fetch(endpoint, { method: 'POST' });
+    await fetch(getApi(endpoint), { method: 'POST' });
     setSimRunning(!simRunning);
   };
 
   const approveRecommendation = async (recId: number) => {
-    await fetch(`/api/recommendations/${recId}/approve`, { method: 'POST' });
+    await fetch(getApi(`/api/recommendations/${recId}/approve`), { method: 'POST' });
   };
 
   const triggerRain = async (risk: number) => {
-    await fetch(`/api/sim/weather?risk=${risk}`, { method: 'POST' });
+    await fetch(getApi(`/api/sim/weather?risk=${risk}`), { method: 'POST' });
   };
 
   const elapsed = Math.floor(simState.time_sec);
@@ -197,7 +199,7 @@ export default function App() {
           background: '#f59e0b', color: '#000', textAlign: 'center',
           fontSize: 12, fontWeight: 600, padding: '4px 0',
         }}>
-          DEMO MODE — Showing sample data. Backend not connected.
+          DEMO MODE — Backend not connected. Showing sample data.
         </div>
       )}
       <Header

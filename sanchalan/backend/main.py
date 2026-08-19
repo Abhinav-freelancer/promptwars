@@ -79,12 +79,46 @@ app.add_middleware(
 # ─── REST API ────────────────────────────────────────────────────
 
 @app.get("/api/status")
+@app.get("/api/sim/status")
 def status():
+    corridors = {}
+    if latest_snapshot and latest_crs:
+        for cid, cm in latest_snapshot.corridors.items():
+            crs = latest_crs.get(cid)
+            corridors[cid] = {
+                "vehicle_flow": cm.vehicle_flow,
+                "mean_speed": round(cm.mean_speed * 3.6, 1),
+                "num_buses": cm.num_buses,
+                "bus_headway_var": round(cm.bus_headway_var, 1),
+                "crs_score": crs.crs_score if crs else 0,
+                "crs_level": crs.level if crs else "green",
+                "explanation": crs.explanation if crs else "",
+                "type_counts": cm.type_counts,
+            }
+
+    recs_list = []
+    for cid, recs in latest_recommendations.items():
+        for rec in recs:
+            recs_list.append({
+                "corridor_id": rec.corridor_id,
+                "action_type": rec.action_type,
+                "action_detail": rec.action_detail,
+                "priority": rec.priority,
+            })
+
     return {
         "status": "running",
         "sim_tick": traci_client.tick,
         "sim_running": sim_running,
         "active_ws_clients": len(ws_clients),
+        "tick": latest_snapshot.tick if latest_snapshot else 0,
+        "time_sec": latest_snapshot.time_sec if latest_snapshot else 0,
+        "total_vehicles": latest_snapshot.total_vehicles if latest_snapshot else 0,
+        "weather_risk": latest_snapshot.weather_risk if latest_snapshot else 0,
+        "institutional_flag": latest_snapshot.institutional_flag if latest_snapshot else False,
+        "corridors": corridors,
+        "recommendations": recs_list,
+        "signals": latest_snapshot.signals if latest_snapshot else {},
     }
 
 

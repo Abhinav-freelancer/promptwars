@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: sanchalan-backend
+    runtime: docker
+    dockerfilePath: sanchalan/Dockerfile
+    healthCheckPath: /api/status
+    envVars:
+      - key: SUMO_HOME
+        value: /usr/share/sumo

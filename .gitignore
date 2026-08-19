@@ -12,8 +12,8 @@ build/
 *.sqlite3
 
 # ML model artifacts
-*.pkl
 *.joblib
+!sanchalan/backend/ml/crs_forecaster.pkl
 
 # SUMO output
 simulation/network/*.last_sumo_cmd
