@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd sanchalan/dashboard && npm install && npm run build",
+  "outputDirectory": "sanchalan/dashboard/dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
