@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/connections_file.xsd">
+    <!-- netconvert will auto-generate signal connections from node type="traffic_light" -->
+    <!-- Explicit connections for non-obvious movements only -->
+    <connection from="A_to_B" to="B_to_C"/>
+    <connection from="A_to_B" to="B_to_A"/>
+    <connection from="C_to_B" to="B_to_A"/>
+    <connection from="C_to_B" to="B_to_C"/>
+    <connection from="H_to_B" to="B_to_C"/>
+    <connection from="H_to_B" to="B_to_A"/>
+
+    <connection from="B_to_C" to="C_to_D"/>
+    <connection from="B_to_C" to="C_to_F"/>
+    <connection from="D_to_C" to="C_to_B"/>
+    <connection from="D_to_C" to="C_to_F"/>
+    <connection from="F_to_C" to="C_to_B"/>
+    <connection from="F_to_C" to="C_to_D"/>
+
+    <connection from="C_to_D" to="D_to_E"/>
+    <connection from="C_to_D" to="D_to_I"/>
+    <connection from="E_to_D" to="D_to_C"/>
+    <connection from="E_to_D" to="D_to_I"/>
+    <connection from="I_to_D" to="D_to_C"/>
+    <connection from="I_to_D" to="D_to_E"/>
+
+    <connection from="C_to_F" to="F_to_G"/>
+    <connection from="G_to_F" to="F_to_C"/>
+</connections>

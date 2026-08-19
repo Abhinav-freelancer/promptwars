@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-08-19T15:50:20.064490+05:30 by Eclipse SUMO sumo 1.27.1
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\personal projects\promptwars\sanchalan\simulation\network\sanchalan.net.xml"/>
+        <route-files value="D:\personal projects\promptwars\sanchalan\simulation\network\sanchalan.rou.xml"/>
+        <additional-files value="D:\personal projects\promptwars\sanchalan\simulation\network\sanchalan.add.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="D:\personal projects\promptwars\sanchalan\simulation\network\tripinfo.xml"/>
+        <vehroute-output value="D:\personal projects\promptwars\sanchalan\simulation\network\vehroute.xml"/>
+    </output>
+
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+        <step-length value="1.0"/>
+    </time>
+
+    <processing>
+        <time-to-teleport value="300"/>
+        <time-to-teleport.highways value="0"/>
+        <lanechange.duration value="4"/>
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <xml-validation value="never"/>
+        <duration-log.disable value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <traci_server>
+        <remote-port value="49700"/>
+    </traci_server>
+
+    <gui_only>
+        <quit-on-end value="true"/>
+        <start value="true"/>
+    </gui_only>
+
+</sumoConfiguration>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <!-- Bus Route 1: West-East along MG Road (Route 500D) -->
+    <route id="bus_route_1_wb" color="0,0.6,0" edges="A_to_B B_to_C C_to_D D_to_E"/>
+    <route id="bus_route_1_eb" color="0,0.6,0" edges="E_to_D D_to_C C_to_B B_to_A"/>
+
+    <!-- Bus Route 2: North-South along Brigade Road (Route 335) -->
+    <route id="bus_route_2_sb" color="0,0.4,0.8" edges="F_to_G G_to_F F_to_C"/>
+
+    <!-- Car/TW/Auto routes -->
+    <route id="route_WE_full" edges="A_to_B B_to_C C_to_D D_to_E"/>
+    <route id="route_EW_full" edges="E_to_D D_to_C C_to_B B_to_A"/>
+    <route id="route_WE_mid" edges="A_to_B B_to_C C_to_D"/>
+    <route id="route_EW_mid" edges="D_to_C C_to_B B_to_A"/>
+    <route id="route_NS_full" edges="F_to_G G_to_F F_to_C C_to_B"/>
+    <route id="route_side_E" edges="H_to_B B_to_C C_to_D D_to_E"/>
+    <route id="route_side_W" edges="I_to_D D_to_C C_to_B B_to_A"/>
+
+    <!-- FLOWS: MUST be sorted by begin time -->
+
+    <!-- begin=0 flows -->
+    <flow id="flow_car_WE" type="car" begin="0" end="3600" period="1.5" route="route_WE_full" departSpeed="max"/>
+    <flow id="flow_car_EW" type="car" begin="0" end="3600" period="1.7" route="route_EW_full" departSpeed="max"/>
+    <flow id="flow_tw_WE" type="twowheeler" begin="0" end="3600" period="0.9" route="route_WE_full" departSpeed="max"/>
+    <flow id="flow_tw_EW" type="twowheeler" begin="0" end="3600" period="1.1" route="route_EW_full" departSpeed="max"/>
+    <flow id="flow_bus_500D_wb" type="bus" begin="0" end="3600" period="60" route="bus_route_1_wb" departSpeed="max"/>
+
+    <!-- begin=15 -->
+    <flow id="flow_bus_500D_eb" type="bus" begin="15" end="3600" period="60" route="bus_route_1_eb" departSpeed="max"/>
+
+    <!-- begin=30 -->
+    <flow id="flow_bus_335_sb" type="bus" begin="30" end="3600" period="90" route="bus_route_2_sb" departSpeed="max"/>
+
+    <!-- begin=100 -->
+    <flow id="flow_auto_WE" type="auto" begin="100" end="3600" period="3.0" route="route_WE_full" departSpeed="max"/>
+    <flow id="flow_auto_EW" type="auto" begin="100" end="3600" period="3.5" route="route_EW_full" departSpeed="max"/>
+
+    <!-- begin=200 -->
+    <flow id="flow_tw_side" type="twowheeler" begin="200" end="3600" period="2.0" route="route_side_E" departSpeed="max"/>
+    <flow id="flow_auto_NS" type="auto" begin="200" end="3600" period="6.0" route="route_NS_full" departSpeed="max"/>
+    <flow id="flow_tw_NS" type="twowheeler" begin="200" end="3600" period="1.5" route="route_NS_full" departSpeed="max"/>
+
+    <!-- begin=300 -->
+    <flow id="flow_car_WE_mid" type="car" begin="300" end="3600" period="2.5" route="route_WE_mid" departSpeed="max"/>
+    <flow id="flow_car_EW_mid" type="car" begin="300" end="3600" period="3.0" route="route_EW_mid" departSpeed="max"/>
+    <flow id="flow_car_side" type="car" begin="300" end="3600" period="4.0" route="route_side_W" departSpeed="max"/>
+</routes>

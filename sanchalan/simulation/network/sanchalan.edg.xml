@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/edges_file.xsd">
+    <!-- Main road MG Road: 4 lanes each direction, 50km/h speed limit -->
+    <!-- Westbound (left to right in reality, but edge direction matters) -->
+    <edge id="A_to_B" from="A_west_entry" to="B_signal_1" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="B_to_C" from="B_signal_1" to="C_signal_2" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="C_to_D" from="C_signal_2" to="D_signal_3" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="D_to_E" from="D_signal_3" to="E_east_entry" numLanes="4" speed="13.89" priority="1" type="urban"/>
+
+    <!-- Eastbound (opposite direction) -->
+    <edge id="B_to_A" from="B_signal_1" to="A_west_entry" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="C_to_B" from="C_signal_2" to="B_signal_1" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="D_to_C" from="D_signal_3" to="C_signal_2" numLanes="4" speed="13.89" priority="1" type="urban"/>
+    <edge id="E_to_D" from="E_east_entry" to="D_signal_3" numLanes="4" speed="13.89" priority="1" type="urban"/>
+
+    <!-- Cross road Brigade Road: 2 lanes each direction -->
+    <edge id="C_to_F" from="C_signal_2" to="F_signal_4" numLanes="2" speed="11.11" priority="2" type="urban"/>
+    <edge id="F_to_G" from="F_signal_4" to="G_south_entry" numLanes="2" speed="11.11" priority="2" type="urban"/>
+    <edge id="F_to_C" from="F_signal_4" to="C_signal_2" numLanes="2" speed="11.11" priority="2" type="urban"/>
+    <edge id="G_to_F" from="G_south_entry" to="F_signal_4" numLanes="2" speed="11.11" priority="2" type="urban"/>
+
+    <!-- Side feeder lanes (narrow, 1 lane) -->
+    <edge id="H_to_B" from="H_side_north" to="B_signal_1" numLanes="1" speed="8.33" priority="3" type="highway"/>
+    <edge id="D_to_I" from="D_signal_3" to="I_side_south" numLanes="1" speed="8.33" priority="3" type="highway"/>
+    <edge id="I_to_D" from="I_side_south" to="D_signal_3" numLanes="1" speed="8.33" priority="3" type="highway"/>
+</edges>

@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Database
+*.db
+*.sqlite3
+
+# ML model artifacts
+*.pkl
+*.joblib
+
+# SUMO output
+simulation/network/*.last_sumo_cmd
+simulation/network/output/
+simulation/network/*.xmlproj
+
+# Node
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.vite/
+
+# Environment
+.env
+.env.local
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

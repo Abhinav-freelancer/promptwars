@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <!-- Vehicle types: Indian mixed traffic composition -->
+    <vType id="car" accel="2.6" decel="4.5" sigma="0.5" length="4.5" minGap="2.5" maxSpeed="16.67" color="1,1,1"/>
+    <vType id="twowheeler" accel="3.0" decel="5.0" sigma="0.7" length="2.0" minGap="1.5" maxSpeed="13.89" color="0,0,1"/>
+    <vType id="auto" accel="2.0" decel="4.0" sigma="0.6" length="3.5" minGap="2.0" maxSpeed="11.11" color="1,0.5,0"/>
+    <vType id="bus" accel="1.5" decel="3.5" sigma="0.3" length="12.0" minGap="3.0" maxSpeed="13.89" color="0,0.6,0"/>
+
+    <!-- Bus stops on main road -->
+    <busStop id="stop_B_west" lane="B_to_A_0" startingPos="20" endPos="60" duration="30"/>
+    <busStop id="stop_C_west" lane="C_to_B_0" startingPos="20" endPos="60" duration="30"/>
+    <busStop id="stop_C_south" lane="F_to_C_0" startingPos="20" endPos="60" duration="30"/>
+    <busStop id="stop_D_east" lane="D_to_E_0" startingPos="20" endPos="60" duration="30"/>
+    <busStop id="stop_B_east" lane="B_to_C_0" startingPos="20" endPos="60" duration="30"/>
+    <busStop id="stop_D_west" lane="D_to_C_0" startingPos="20" endPos="60" duration="30"/>
+
+    <!-- Induction loop detectors at each corridor (for vehicle counting) -->
+    <inductionLoop id="det_A_to_B" lane="A_to_B_0" pos="-1" file="detectors_A_to_B.xml"/>
+    <inductionLoop id="det_B_to_C" lane="B_to_C_0" pos="-1" file="detectors_B_to_C.xml"/>
+    <inductionLoop id="det_C_to_D" lane="C_to_D_0" pos="-1" file="detectors_C_to_D.xml"/>
+    <inductionLoop id="det_D_to_E" lane="D_to_E_0" pos="-1" file="detectors_D_to_E.xml"/>
+    <inductionLoop id="det_C_to_F" lane="C_to_F_0" pos="-1" file="detectors_C_to_F.xml"/>
+    <inductionLoop id="det_F_to_G" lane="F_to_G_0" pos="-1" file="detectors_F_to_G.xml"/>
+</additional>

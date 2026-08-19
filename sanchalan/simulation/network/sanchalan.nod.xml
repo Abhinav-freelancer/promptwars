@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
+    <!-- Main road (MG Road) - East-West, 4 lanes each direction -->
+    <node id="A_west_entry" x="0.0" y="0.0" type="dead_end"/>
+    <node id="B_signal_1" x="800.0" y="0.0" type="traffic_light"/>
+    <node id="C_signal_2" x="1600.0" y="0.0" type="traffic_light"/>
+    <node id="D_signal_3" x="2400.0" y="0.0" type="traffic_light"/>
+    <node id="E_east_entry" x="3200.0" y="0.0" type="dead_end"/>
+
+    <!-- Cross road (Brigade Road) - North-South from C -->
+    <node id="F_signal_4" x="1600.0" y="-600.0" type="traffic_light"/>
+    <node id="G_south_entry" x="1600.0" y="-1200.0" type="dead_end"/>
+
+    <!-- Side entries ( feeder lanes ) -->
+    <node id="H_side_north" x="1200.0" y="-200.0" type="dead_end"/>
+    <node id="I_side_south" x="2000.0" y="-200.0" type="dead_end"/>
+</nodes>
